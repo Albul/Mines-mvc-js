@@ -22,11 +22,11 @@ define(
         var Model = function (cols, rows, mines) {
 
             var
-                cells = new Cells(cols, rows, mines),
+                cells = new Cells(cols, rows, mines), // Матрица клеток
 
                 /**
                  * Поиск и открытие свободных клеток,
-                 * поиск делаеться рекурсивно пока встречаються нулевые клетки
+                 * поиск делаеться рекурсивно до тех пор пока встречаються нулевые клетки
                  */
                 searchEmpty = function (i, j, arrChanges) {
                     cells.open(i, j);
@@ -82,6 +82,7 @@ define(
                     this.dispatchEvent('changed', arrChanges);
 
                     if (cells.getNumberClosed() == mines) {
+                        this.dispatchEvent('wonGame');
                         alert('Вы выграли');
                     }
                 }
@@ -94,24 +95,36 @@ define(
                 return cells.getContentCell(i, j);
             };
 
+            /**
+             * Проверить ячейку на открытость
+             */
             this.isOpened = function (i, j) {
                 return cells.isOpened(i, j);
             };
 
+            /**
+             * Проверить ячейку на на содержание мины
+             */
             this.isMine = function (i, j) {
                 return cells.isMine(i, j);
             };
 
+            /**
+             * Вовращает количество рядков
+             */
             this.getRows = function () {
                 return rows;
             }
 
+            /**
+             * Вовращает количество столбцов
+             */
             this.getCols = function () {
                 return cols;
             }
         };
 
-        // Наследуемся от диспетчера событий (чтобы уведомлять подпищиков об изменении в модели)
+        // Наследуемся от диспетчера событий (чтобы уведомлять подпищиков об изменениях в модели)
         Model.prototype = new events.EventDispatcher();
 
         return Model;

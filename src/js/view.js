@@ -62,6 +62,8 @@ define(
             Cell.prototype.MINE_COLOR_FILL = '#7B7B7B';
             Cell.prototype.MINE_COLOR_STROKE = '#121212';
 
+            Cell.prototype.COLORS_NUMBER = ['#0000ff', '#00a000', '#ff0000'];
+
             Cell.prototype.SIZE = 60;
 			Cell.prototype.FONT_SIZE = 54;
 			Cell.prototype.THORN_HEIGHT = 8;    // Высота шипа мины
@@ -124,15 +126,17 @@ define(
                 context.lineWidth = 1;
                 context.fillStyle = grd;
                 context.strokeStyle = "#7d838c";
-                context.roundRect(this.x, this.y, this.width, this.height, 6, true, false);
-                context.roundRect(this.x -1 , this.y - 1, this.width, this.height, 6, false, true);
-				var padding = 36;
+                context.roundRect(this.x, this.y, this.SIZE, this.SIZE, 6, true, false);
+                context.roundRect(this.x -1 , this.y - 1, this.SIZE, this.SIZE, 6, false, true);
+
+                // Отрисовываем число в средине ячейки
                 if (typeof content != 'undefined' && content > 0) {
                     context.font = 'bold ' + this.FONT_SIZE + 'px Arial';
                     context.textAlign = 'center';
                     context.textBaseline = 'middle';
-                    context.fillStyle = 'blue';
-                    context.fillText(content.toString(), this.x + this.width / 2, this.y + this.height / 2);
+                    // В зависимости от числа в ячейке назначаем соответствующий цвет из массива
+                    context.fillStyle = this.COLORS_NUMBER[(content - 1) % this.COLORS_NUMBER.length];
+                    context.fillText(content.toString(), this.x + this.SIZE / 2, this.y + this.SIZE / 2);
                 }
                 if (isMine) {
                     this.drawMine();
@@ -162,8 +166,6 @@ define(
                     while (j--) {
                         cell = cells[i][j];
                         if (utils.collision.hitTestPoint(cell, mouseX, mouseY)) {
-                             //box.color = '#ff0000';
-                             //box.draw();
                             return cell;
                         }
                     }
