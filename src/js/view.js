@@ -62,38 +62,38 @@ define(
             Cell.prototype.MINE_COLOR_FILL = '#7B7B7B';
             Cell.prototype.MINE_COLOR_STROKE = '#121212';
 
-            Cell.prototype.COLORS_NUMBER = ['#0000ff', '#00a000', '#ff0000'];
+            Cell.prototype.COLORS_NUMBER = ['#0000FF', '#00A000', '#FF0000', '#00007F', '#A00000', '#00CCFF', '#A000A0', '#000000'];
 
             Cell.prototype.SIZE = 60;
-			Cell.prototype.FONT_SIZE = 54;
-			Cell.prototype.THORN_HEIGHT = 8;    // Высота шипа мины
+            Cell.prototype.FONT_SIZE = 54;
+            Cell.prototype.THORN_HEIGHT = 8;    // Высота шипа мины
 
             /**
              * Drawing the mines in the middle of the cell
              */
-			Cell.prototype.drawMine = function () {
-				var
-                    // Центр мины
+            Cell.prototype.drawMine = function () {
+                var
+                // Центр мины
                     x0 = this.x + this.SIZE / 2,
                     y0 = this.y + this.SIZE / 2,
-				    r = this.SIZE / 3.5, // Радиус мины
+                    r = this.SIZE / 3.5, // Радиус мины
                     angle = 2 * Math.PI, // Бегущий угол, с его помощью рисуем шипы
                     x1, y1, // Точьки на окружносте мины
                     x2, y2, // Точьки за окружностью мины
-                    // Градиентная заливка мины
+                // Градиентная заливка мины
                     gradient = context.createRadialGradient(x0 - 4, y0 - 2, 0, x0 - 4, y0 - 2, r);
 
                 gradient.addColorStop(0, this.MINE_COLOR_FILL);
                 gradient.addColorStop(1, this.MINE_COLOR_STROKE);
 
                 // Окружность мины
-				context.beginPath();
-				context.arc(x0, y0, r, 0, 2 * Math.PI, false);
+                context.beginPath();
+                context.arc(x0, y0, r, 0, 2 * Math.PI, false);
                 context.fillStyle = gradient;
-				context.fill();
-				context.lineWidth = 5;
-				context.strokeStyle = this.MINE_COLOR_STROKE;
-				context.stroke();
+                context.fill();
+                context.lineWidth = 5;
+                context.strokeStyle = this.MINE_COLOR_STROKE;
+                context.stroke();
 
                 // Шипы мины
                 while (angle) {
@@ -112,7 +112,7 @@ define(
                 context.moveTo(x0, y0 - this.THORN_HEIGHT / 4);
                 context.lineTo(x0 , y0 + this.THORN_HEIGHT / 4);
                 context.stroke();
-			};
+            };
 
             Cell.prototype.draw = function(content, isOpened, isMine) {
                 var grd = context.createLinearGradient(this.x, this.y, this.x, this.y + this.height);
@@ -186,7 +186,7 @@ define(
                 for (var i = 0; i < ROWS; i++) {            //
                     for (var j = 0; j < COLS; j++) {
                         if (model.isMine(i, j))
-                        cells[i][j].drawMine();
+                            cells[i][j].drawMine();
                     }
                 }
             };
