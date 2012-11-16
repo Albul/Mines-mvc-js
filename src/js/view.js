@@ -51,15 +51,68 @@ define(
                     this.height = this.SIZE; //
                 },
                 openCell = function (cell) {
-                    cell.draw(model.getContentCell(cell.i, cell.j), model.isOpened(cell.i, cell.j));
+                    cell.draw(model.getContentCell(cell.i, cell.j), model.isOpened(cell.i, cell.j), model.isMine(cell.i, cell.j));
                 };
 
             Cell.prototype.TOP_COLOR_OPENED = '#fcfcfc';
             Cell.prototype.BOTTOM_COLOR_OPENED = '#e1dfde';
             Cell.prototype.TOP_COLOR_CLOSED = '#8cb0dc';
             Cell.prototype.BOTTOM_COLOR_CLOSED = '#7aa1d2';
+            // Цвет мины
+            Cell.prototype.MINE_COLOR_FILL = '#7B7B7B';
+            Cell.prototype.MINE_COLOR_STROKE = '#121212';
+
             Cell.prototype.SIZE = 60;
-            Cell.prototype.draw = function(content, isOpened) {
+			Cell.prototype.FONT_SIZE = 54;
+			Cell.prototype.THORN_HEIGHT = 8;    // Высота шипа мины
+
+            /**
+             * Drawing the mines in the middle of the cell
+             */
+			Cell.prototype.drawMine = function () {
+				var
+                    // Центр мины
+                    x0 = this.x + this.SIZE / 2,
+                    y0 = this.y + this.SIZE / 2,
+				    r = this.SIZE / 3.5, // Радиус мины
+                    angle = 2 * Math.PI, // Бегущий угол, с его помощью рисуем шипы
+                    x1, y1, // Точьки на окружносте мины
+                    x2, y2, // Точьки за окружностью мины
+                    // Градиентная заливка мины
+                    gradient = context.createRadialGradient(x0 - 4, y0 - 2, 0, x0 - 4, y0 - 2, r);
+
+                gradient.addColorStop(0, this.MINE_COLOR_FILL);
+                gradient.addColorStop(1, this.MINE_COLOR_STROKE);
+
+                // Окружность мины
+				context.beginPath();
+				context.arc(x0, y0, r, 0, 2 * Math.PI, false);
+                context.fillStyle = gradient;
+				context.fill();
+				context.lineWidth = 5;
+				context.strokeStyle = this.MINE_COLOR_STROKE;
+				context.stroke();
+
+                // Шипы мины
+                while (angle) {
+                    x1 = x0 + r * Math.cos(angle);
+                    y1 = y0 + r * Math.sin(angle);
+                    x2 = x0 + (r + this.THORN_HEIGHT) * Math.cos(angle);
+                    y2 = y0 + (r + this.THORN_HEIGHT) * Math.sin(angle);
+                    context.beginPath();
+                    context.moveTo(x1, y1);
+                    context.lineTo(x2, y2);
+                    context.stroke();
+                    angle -= Math.PI / 4;
+                }
+
+                // Шип в средине мины
+                context.moveTo(x0, y0 - this.THORN_HEIGHT / 4);
+                context.lineTo(x0 , y0 + this.THORN_HEIGHT / 4);
+                context.stroke();
+			};
+
+            Cell.prototype.draw = function(content, isOpened, isMine) {
                 var grd = context.createLinearGradient(this.x, this.y, this.x, this.y + this.height);
                 if (isOpened) {
                     grd.addColorStop(0, this.TOP_COLOR_OPENED);
@@ -68,26 +121,29 @@ define(
                     grd.addColorStop(0, this.TOP_COLOR_CLOSED);
                     grd.addColorStop(1, this.BOTTOM_COLOR_CLOSED);
                 }
-
+                context.lineWidth = 1;
                 context.fillStyle = grd;
                 context.strokeStyle = "#7d838c";
                 context.roundRect(this.x, this.y, this.width, this.height, 6, true, false);
                 context.roundRect(this.x -1 , this.y - 1, this.width, this.height, 6, false, true);
-                if (typeof content != 'undefined' && content != 0) {
-                    context.font = 'bold 36px Arial';
+				var padding = 36;
+                if (typeof content != 'undefined' && content > 0) {
+                    context.font = 'bold ' + this.FONT_SIZE + 'px Arial';
                     context.textAlign = 'center';
                     context.textBaseline = 'middle';
                     context.fillStyle = 'blue';
                     context.fillText(content.toString(), this.x + this.width / 2, this.y + this.height / 2);
                 }
-
+                if (isMine) {
+                    this.drawMine();
+                }
             };
 
             var cells = utils.array.createMatrix(8, 8);
             for (var i = 0; i < ROWS; i++) {            //
                 for (var j = 0; j < COLS; j++) {
                     cells[i][j] = new Cell(i, j);
-                    cells[i][j].draw(0, false);
+                    cells[i][j].draw(0, false, false);
                 }
             }
 
@@ -124,8 +180,18 @@ define(
                 }
             };
 
+            var onLostGame = function () {
+                for (var i = 0; i < ROWS; i++) {            //
+                    for (var j = 0; j < COLS; j++) {
+                        if (model.isMine(i, j))
+                        cells[i][j].drawMine();
+                    }
+                }
+            };
+
             /* Инициализация */
             model.addEventListener('changed', update);
+            model.addEventListener('lostGame', onLostGame);
         };
 
         return View;

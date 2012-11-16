@@ -69,8 +69,10 @@ define(
                 if (cells.isClosed(i, j)) {
                     var arrChanges = [];
                     cells.open(i, j);
+                    arrChanges.push({'i':i, 'j': j});
 
                     if (cells.isMine(i, j)) {
+                        this.dispatchEvent('lostGame');
                         alert('Игра окончена');
                     } else if (cells.isZero(i, j)) { // Если кликнули на нулевой ячейке, откроем всю пустую область
                         searchEmpty(i, j, arrChanges);
@@ -94,6 +96,10 @@ define(
 
             this.isOpened = function (i, j) {
                 return cells.isOpened(i, j);
+            };
+
+            this.isMine = function (i, j) {
+                return cells.isMine(i, j);
             };
 
             this.getRows = function () {
