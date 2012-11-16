@@ -15,41 +15,26 @@
  */
 define(
     'controller',
-    function() {
-		         //http://js-tut.aardon.de/js-tut/tutorial/position.html
-         function getElementPosition(element) {
-            var elem=element, tagname="", x=0, y=0;
-           
-            while((typeof(elem) == "object") && (typeof(elem.tagName) != "undefined")) {
-               y += elem.offsetTop;
-               x += elem.offsetLeft;
-               tagname = elem.tagName.toUpperCase();
+    ['utils'],
+    function(utils) {
 
-               if(tagname == "BODY")
-                  elem=0;
-
-               if(typeof(elem) == "object") {
-                  if(typeof(elem.offsetParent) == "object")
-                     elem = elem.offsetParent;
-               }
-            }
-
-            return {x: x, y: y};
-         }
-         
         var Controller = function (model, view) {
-            /*         view.canvas.addEventListener('mousemove', function (e) {
-             console.log(e.offsetX, e.offsetY);
-             view.getBoxAtMouse(e.offsetX, e.offsetY);
-             });*/
+            var endGame = function () {
+                    model.removeEventListener('wonGame', endGame);
+                    model.removeEventListener('lostGame', endGame);
+                    view.canvas.removeEventListener('click', onClick);
+                },
+                onClick = function (e) {
+                    console.log(e.offsetX, e.offsetY);
+                    var canvasPosition = utils.dom.getElementPosition(document.getElementById("canvas"));
+                    var cell = view.getCellAtMouse(e.clientX + window.scrollX - canvasPosition.x, e.clientY + window.scrollY - canvasPosition.y);
+                    model.openCell(cell.i, cell.j);
+                };
 
-            view.canvas.addEventListener('click', function (e) {
-                console.log(e.offsetX, e.offsetY);
-				 var canvasPosition = getElementPosition(document.getElementById("canvas"));
-				 
-                var cell = view.getCellAtMouse(e.clientX - canvasPosition.x, e.clientY - canvasPosition.y);
-                model.openCell(cell.i, cell.j);
-            });
+            /* Инициализация */
+            view.canvas.addEventListener('click', onClick);
+            model.addEventListener('wonGame', endGame);
+            model.addEventListener('lostGame', endGame);
         };
         return Controller;
     }
