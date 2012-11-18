@@ -62,7 +62,10 @@ define(
             Cell.prototype.MINE_COLOR_FILL = '#7B7B7B';
             Cell.prototype.MINE_COLOR_STROKE = '#121212';
 
-            Cell.prototype.COLORS_NUMBER = ['#0000FF', '#00A000', '#FF0000', '#00007F', '#A00000', '#00CCFF', '#A000A0', '#000000'];
+            Cell.prototype.COLORS_NUMBER = [
+                '#0000FF', '#00A000', '#FF0000', '#00007F',
+                '#A00000', '#00CCFF', '#A000A0', '#000000'
+            ];
 
             Cell.prototype.SIZE = 60;
             Cell.prototype.FONT_SIZE = 54;

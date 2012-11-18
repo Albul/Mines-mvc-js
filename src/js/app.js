@@ -14,19 +14,25 @@
  * limitations under the License.
  */
 requirejs.config({
-    //By default load any module IDs from js/lib
-    baseUrl: 'js'
-    //except, if the module ID starts with "app",
-    //load it from the js/app directory. paths
-    //config is relative to the baseUrl, and
-    //never includes a ".js" extension since
-    //the paths config could be for a directory.
-
+    baseUrl: 'js/',
+	paths: {  
+		'jquery':		'libs/jquery',
+		'jqm':			'libs/jquery.mobile',
+		'view':			'view/view',
+		'utils':		'utils/utils',
+		'events':		'utils/events',
+		'controller':	'controller/controller',
+		'model':		'model/model',
+		'cells':		'model/cells',
+		'constants':	'model/constants'
+   }
 });
 
+
 requirejs(
-    ['model','view','controller'],
-    function(Model, View, Controller) {
+    ['jquery', 'jqm', 'model', 'view', 'controller'],
+    function($, jqm, Model, View, Controller) {
+		$('#canvas').css({position: "absolute", left: ($(window).width() - $('#canvas').width()) / 2, marginLeft: 0});
         var model = new Model(8, 8, 10);
         var view = new View(model);
         var controller = new Controller(model, view);

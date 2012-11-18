@@ -13,12 +13,75 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 -->
-<!doctype html>
+<!DOCTYPE html>
 <html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="css/jquery.mobile-min.css" />
+	<link rel="stylesheet" href="css/themes-min.css" />
+	<script type="text/javascript" data-main="js/app.js" src="js/require.js"></script>
+</head>
 <body>
-<script type="text/javascript" data-main="js/app.js" src="js/require.js"></script>
-<div align="center">
-    <canvas height='640' width='540' id='canvas'>Обновите браузер</canvas>
-</div>
+	<!-- Главная страница -->
+	<div data-role="page" data-theme="b" id="page_main">
+		<div data-role="header" data-theme="b">
+			<h3>
+				Mines.html5
+			</h3>
+			<a href="#page_settings" data-icon="gear" class="ui-btn-right">Настройки</a>
+		</div>
+		<div data-role="content">
+			<ul data-role="listview" data-inset="true" data-divider-theme="b">
+				<li data-role="list-divider" role="heading">
+					Выбор игры
+				</li>
+				<li>
+					<a href="#page-game" data-transition="slide">
+						8 x 8 (10 мин)
+					</a>
+				</li>
+				<li>
+					<a href="#page-game" data-transition="slide">
+						10 x 10 (10 мин)
+					</a>
+				</li>
+				<li>
+					<a href="#page-game" data-transition="slide">
+						16 x 16 (40 мин)
+					</a>
+				</li>
+				<li>
+					<a href="#" data-transition="slide">
+						Выход
+					</a>
+				</li>
+			</ul>
+		</div>
+		<div data-role="footer" data-theme="b" data-position="fixed">
+			<h3>
+				(c) Albul Alexandr
+			</h3>
+		</div>
+	</div>
+	<!--/ Главная страница -->
+	<!-- Игра -->
+	<div data-role="page" data-theme="b" id="page-game">
+		<div data-role="header" data-theme="b">
+			<h3>
+				Mines.html5
+			</h3>
+			<a href="#page_settings" data-icon="gear" class="ui-btn-right">Настройки</a>
+		</div>
+		<div data-role="content">
+			<canvas height='640' width='540' id='canvas'>Обновите браузер</canvas>
+		</div>
+		<div data-role="footer" data-theme="b" data-position="fixed">
+			<h3>
+				(c) Albul Alexandr
+			</h3>
+		</div>
+	</div>
+	<!--/ Игра -->
 </body>
 </html>
