@@ -1,87 +1,147 @@
-<!--
-* Copyright 2012 Alexandr Albul
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
--->
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<link rel="stylesheet" href="css/jquery.mobile-min.css" />
-	<link rel="stylesheet" href="css/themes-min.css" />
-	<script type="text/javascript" data-main="js/app.js" src="js/require.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="user-scalable=no" />
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-	<!-- Главная страница -->
-	<div data-role="page" data-theme="b" id="page_main">
-		<div data-role="header" data-theme="b">
-			<h3>
-				Mines.html5
-			</h3>
-			<a href="#page_settings" data-icon="gear" class="ui-btn-right">Настройки</a>
-		</div>
-		<div data-role="content">
-			<ul data-role="listview" data-inset="true" data-divider-theme="b">
-				<li data-role="list-divider" role="heading">
-					Выбор игры
-				</li>
-				<li>
-					<a href="#page-game" data-transition="slide">
-						8 x 8 (10 мин)
-					</a>
-				</li>
-				<li>
-					<a href="#page-game" data-transition="slide">
-						10 x 10 (10 мин)
-					</a>
-				</li>
-				<li>
-					<a href="#page-game" data-transition="slide">
-						16 x 16 (40 мин)
-					</a>
-				</li>
-				<li>
-					<a href="#" data-transition="slide">
-						Выход
-					</a>
-				</li>
-			</ul>
-		</div>
-		<div data-role="footer" data-theme="b" data-position="fixed">
-			<h3>
-				(c) Albul Alexandr
-			</h3>
-		</div>
-	</div>
-	<!--/ Главная страница -->
-	<!-- Игра -->
-	<div data-role="page" data-theme="b" id="page-game">
-		<div data-role="header" data-theme="b">
-			<h3>
-				Mines.html5
-			</h3>
-			<a href="#page_settings" data-icon="gear" class="ui-btn-right">Настройки</a>
-		</div>
-		<div data-role="content">
-			<canvas height='640' width='540' id='canvas'>Обновите браузер</canvas>
-		</div>
-		<div data-role="footer" data-theme="b" data-position="fixed">
-			<h3>
-				(c) Albul Alexandr
-			</h3>
-		</div>
-	</div>
-	<!--/ Игра -->
+
+<div id="page-menu" class="ui-page">
+    <div class="ui-content">
+        <div class="ui-bar-a">
+            <br>
+            <div class="title">Главное меню</div>
+            <br>
+            <br>
+            <br>
+            <a href="#/page-choose-game" class="button button-blue">
+                <span>Начать игру</span>
+            </a>
+            <br>
+            <a href="#/records" class="button button-blue">
+                <span>Рекорды</span>
+            </a>
+            <br>
+            <a href="#/about" class="button button-blue">
+                <span>Об игре</span>
+            </a>
+            <br>
+            <a href="#/exit" class="button button-blue">
+                <span>Виход</span>
+            </a>
+            <br>
+            <br>
+        </div>
+    </div>
+</div>
+
+<div id="page-choose-game" class="ui-page">
+    <div class="ui-content">
+        <div class="ui-bar-a">
+            <br>
+            <div class="title">Выбор игры</div>
+            <br>
+            <a href="#/page-game/8/8/10" class="button button-blue">
+                <span>8 x 8 (10 мин)</span>
+            </a>
+            <br>
+            <a href="#/page-game/10/10/15" class="button button-blue">
+                <span>10 x 10 (15 мин)</span>
+            </a>
+            <br>
+            <a href="#/page-game/16/16/40" class="button button-blue">
+                <span>16 x 16 (40 мин)</span>
+            </a>
+            <br>
+            <a href="#/page-custom" class="button button-blue">
+                <span>Другая</span>
+            </a>
+            <br>
+            <a href="#/" class="button button-blue">
+                <span>Назад</span>
+            </a>
+            <br>
+            <br>
+        </div>
+    </div>
+</div>
+
+<div id="page-custom" class="ui-page">
+    <div class="ui-content">
+        <div class="ui-bar-a">
+            <br>
+            <div class="title">Создание игры</div>
+            <br>
+            <br>
+            <table align="center">
+                <tbody align="left">
+                <tr>
+                    <td>
+                        Горизонталь:
+                    </td>
+                    <td>
+                        <input type="number" id="horiz" min="1" max="120" step="1" value="20">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Вертикаль:
+                    </td>
+                    <td>
+                        <input type="number" id="vert" min="1" max="120" step="1" value="20">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Мины:
+                    </td>
+                    <td>
+                        <input type="number" id="mines" min="1" max="120" step="1" value="60">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <br>
+            <br>
+            <br>
+            <a href="#/create-game" class="button button-blue">
+                <span>Создать игру</span>
+            </a>
+            <br>
+            <a href="#/page-choose-game" class="button button-blue">
+                <span>Назад</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div id="page-game" class="ui-page">
+    <div class="ui-content">
+        <canvas width="480" height="480" id='canvas'>Обновите браузер</canvas>
+    </div>
+</div>
+
+<!-- FLATIRION DIRECTOR ROUTING LIBRARY -->
+<script src="js/libs/director-1.1.6.min.js"></script>
+<script src="js/libs/jquery-1.8.3.min.js"></script>
+<script src="js/libs/CSSPlugin.min.js"></script>
+<script src="js/libs/EasePack.min.js"></script>
+
+<script src="js/libs/TweenLite.min.js"></script>
+
+<script src="js/define.js"></script>
+
+<!-- Utils -->
+<script src="js/utils/math.js"></script>
+<script src="js/utils/matrix.js"></script>
+<script src="js/utils/collision.js"></script>
+<script src="js/utils/dom.js"></script>
+
+<script src="js/constants.js"></script>
+<script src="js/cell.js"></script>
+<script src="js/game.js"></script>
+<script src="js/app.js"></script>
+
 </body>
 </html>

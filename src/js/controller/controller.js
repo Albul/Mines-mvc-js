@@ -15,23 +15,34 @@
  */
 define(
     'controller',
-    ['utils'],
-    function(utils) {
+    ['utils', 'jquery'],
+    function(utils, $) {
 
         var Controller = function (model, view) {
-            var endGame = function () {
+            var 
+				canvasPosition = utils.dom.getElementPosition(document.getElementById("canvas"));
+				endGame = function () {
                     model.removeEventListener('wonGame', endGame);
                     model.removeEventListener('lostGame', endGame);
                     view.canvas.removeEventListener('click', onClick);
                 },
-                onClick = function (e) {
-                    console.log(e.offsetX, e.offsetY);
-                    var canvasPosition = utils.dom.getElementPosition(document.getElementById("canvas"));
+                onClick = function (e) {			
                     var cell = view.getCellAtMouse(e.clientX + window.scrollX - canvasPosition.x, e.clientY + window.scrollY - canvasPosition.y);
                     model.openCell(cell.i, cell.j);
                 };
 
             /* Инициализация */
+            view.canvas.addEventListener('click', onClick);
+            $(view.canvas).mousedown(function (event) {
+                //alert(['Left', 'Middle', 'Right'][event.which - 1]);
+                if (event.which == 3) {
+                    $(this)[0].oncontextmenu = function() {
+                        return false;
+                    }
+                }
+            });
+//            $(view.canvas).bind("contextmenu", function(e){ alert('ura'); return false; })
+            window.document.body.onselectstart = function () {return false;};
             view.canvas.addEventListener('click', onClick);
             model.addEventListener('wonGame', endGame);
             model.addEventListener('lostGame', endGame);
@@ -39,3 +50,8 @@ define(
         return Controller;
     }
 );
+
+// 					var start = new Date();					
+// 
+// 					var end = new Date();
+// 					console.log('Скорость ' + (end.getTime()-start.getTime()) + ' мс');
