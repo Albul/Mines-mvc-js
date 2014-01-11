@@ -13,64 +13,60 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-define(
-    'events',
-    function () {
-		var events = {};
-		
-		events.EventDispatcher = function () {
-			var eventListeners = {
-				any: []         // ��� �������: ���������
-			};
+define('utils.events', function (app) {
+    return {
+        EventDispatcher:function () {
+            var eventListeners = {
+                any: []         // ��� �������: ���������
+            };
 
-			// ���������� �������� ��� �����������
-			var visitListeners = function (action, type, event) {
-				var pubtype = eventListeners.hasOwnProperty(type)? type : 'any';
-				var listeners = eventListeners[pubtype];
+            // ���������� �������� ��� �����������
+            var visitListeners = function (action, type, event) {
+                var pubtype = eventListeners.hasOwnProperty(type)? type : 'any';
+                var listeners = eventListeners[pubtype];
 
-				for (var i = 0, max = listeners.length; i < max; i++) {
-					if (action === 'dispatch') {
-						listeners[i](event);
-					} else {
-						if (listeners[i] === event) {
-							listeners.splice(i, 1);
-						}
-					}
-				}
-			};
+                for (var i = 0, max = listeners.length; i < max; i++) {
+                    if (action === 'dispatch') {
+                        listeners[i](event);
+                    } else {
+                        if (listeners[i] === event) {
+                            listeners.splice(i, 1);
+                        }
+                    }
+                }
+            };
 
-			/**
-			* ������������ ������ �������������� ������� �� ������� EventDispatcher ��� ��������� ��������������� ����������� � �������
-			* @param type ��� �������
-			* @param listener ������� ��������������, �������������� �������
-			*/
-			this.addEventListener = function (type, listener) {
-				type = type || 'any';
-				if (typeof eventListeners[type] === "undefined") {
-					eventListeners[type] = [];
-				}
-				eventListeners[type].push(listener);
-			};
+            /**
+             * ������������ ������ �������������� ������� �� ������� EventDispatcher ��� ��������� ��������������� ����������� � �������
+             * @param type ��� �������
+             * @param listener ������� ��������������, �������������� �������
+             */
+            this.addEventListener = function (type, listener) {
+                type = type || 'any';
+                if (typeof eventListeners[type] === "undefined") {
+                    eventListeners[type] = [];
+                }
+                eventListeners[type].push(listener);
+            };
 
-			/**
-			* ������� �������������� �� ������� EventDispatcher
-			* @param type ��� �������
-			* @param listener ������� ��������������, �������������� �������
-			*/
-			this.removeEventListener = function (type, listener) {
-				visitListeners('remove', type, listener);
-			};
+            /**
+             * ������� �������������� �� ������� EventDispatcher
+             * @param type ��� �������
+             * @param listener ������� ��������������, �������������� �������
+             */
+            this.removeEventListener = function (type, listener) {
+                visitListeners('remove', type, listener);
+            };
 
-			/**
-			* �������� �������
-			* @param type ��� �������
-			* @param event ������ ������� ������������ �����������
-			*/
-			this.dispatchEvent = function (type, event) {
-				visitListeners('dispatch', type, event);
-			};
-		};
+            /**
+             * �������� �������
+             * @param type ��� �������
+             * @param event ������ ������� ������������ �����������
+             */
+            this.dispatchEvent = function (type, event) {
+                visitListeners('dispatch', type, event);
+            };
 
-		return events;
+        }
     }
-); 
+});

@@ -13,45 +13,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-define(
-    'controller',
-    ['utils', 'jquery'],
-    function(utils, $) {
-
+define('controller.Controller', function (app) {
         var Controller = function (model, view) {
-            var 
-				canvasPosition = utils.dom.getElementPosition(document.getElementById("canvas"));
-				endGame = function () {
-                    model.removeEventListener('wonGame', endGame);
-                    model.removeEventListener('lostGame', endGame);
+            var
+                dom = app.utils.dom,
+                canvasPosition = dom.getElementPosition(document.getElementById("canvas"));
+
+            // Events handlers --------------------------------------------- */
+            var
+                onEndGame = function () {
+                    model.removeEventListener('wonGame', onEndGame);
+                    model.removeEventListener('lostGame', onEndGame);
                     view.canvas.removeEventListener('click', onClick);
+                    view.canvas.removeEventListener('mousedown', onMouseDown);
+                    view.canvas.removeEventListener('mouseup', onMouseUp);
                 },
-                onClick = function (e) {			
+                onClick = function (e) {
+                    if (e.which == 3) {
+                        return;
+                    }
                     var cell = view.getCellAtMouse(e.clientX + window.scrollX - canvasPosition.x, e.clientY + window.scrollY - canvasPosition.y);
-                    model.openCell(cell.i, cell.j);
+                    model.tryOpenCell(cell.i, cell.j);
+                },
+                onMouseDown = function (e) {
+                    if (e.which == 3) {
+                        this.oncontextmenu = function () {
+                            return false;
+                        };
+                    }
+                },
+                onMouseUp = function (e) {
+                    if (e.which == 3) { // Right click
+                        var cell = view.getCellAtMouse(e.clientX + window.scrollX - canvasPosition.x, e.clientY + window.scrollY - canvasPosition.y);
+                        model.tryMarkCell(cell.i, cell.j);
+                    }
                 };
 
-            /* Инициализация */
+            // Initialization --------------------------------------------- */
             view.canvas.addEventListener('click', onClick);
-            $(view.canvas).mousedown(function (event) {
-                //alert(['Left', 'Middle', 'Right'][event.which - 1]);
-                if (event.which == 3) {
-                    $(this)[0].oncontextmenu = function() {
-                        return false;
-                    }
-                }
-            });
-//            $(view.canvas).bind("contextmenu", function(e){ alert('ura'); return false; })
+            view.canvas.addEventListener('mousedown', onMouseDown);
+            view.canvas.addEventListener('mouseup', onMouseUp);
+            model.addEventListener('wonGame', onEndGame);
+            model.addEventListener('lostGame', onEndGame);
             window.document.body.onselectstart = function () {return false;};
-            view.canvas.addEventListener('click', onClick);
-            model.addEventListener('wonGame', endGame);
-            model.addEventListener('lostGame', endGame);
         };
         return Controller;
     }
 );
-
-// 					var start = new Date();					
-// 
-// 					var end = new Date();
-// 					console.log('Скорость ' + (end.getTime()-start.getTime()) + ' мс');

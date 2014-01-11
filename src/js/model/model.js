@@ -13,119 +13,195 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-define(
-    'model',
-    ['events', 'utils', 'cells'],
-    function(events, utils, Cells) {
-
+define('model.Model', function (app) {
 
         var Model = function (cols, rows, mines) {
-
+            // Modules --------------------------------------------- */
             var
-                cells = new Cells(cols, rows, mines), // Матрица клеток
+                constants = app.constants,
+                matrix = app.utils.matrix;
 
-                /**
-                 * Поиск и открытие свободных клеток,
-                 * поиск делаеться рекурсивно до тех пор пока встречаються нулевые клетки
-                 */
+            // Private members --------------------------------------------- */
+            var
+            // Matrix contains the number of mines in the neighborhood
+                matrixContent = matrix.create(rows, cols, constants.ZERO),
+            // Matrix states of the cells
+                matrixState = matrix.create(rows, cols, constants.CLOSED_STATE),
+                numberClosed = rows * cols; // The number of closed cells
+
+            // Private methods --------------------------------------------- */
+            var
+            // Calculate neighborhood mines for each cell of the field
+                calculateCells = function () {
+                    var i = rows,
+                        j = cols;
+                    while (i--) {
+                        while (j--) {
+                            if (notMine(i, j)) {
+                                matrixContent[i][j] = calculateCell(i, j);
+                            }
+                        }
+                        j = cols;
+                    }
+                },
+            // Calculate the number of mines that the cell is bordered
+                calculateCell = function (i, j) {
+                    var count = 0;
+
+                    // Check the neighboring cells
+                    if (isMine(i - 1, j)) count++;
+                    if (isMine(i + 1, j)) count++;
+                    if (isMine(i, j - 1)) count++;
+                    if (isMine(i, j + 1)) count++;
+
+                    // Check the diagonal cells
+                    if (isMine(i - 1, j - 1)) count++;
+                    if (isMine(i - 1, j + 1)) count++;
+                    if (isMine(i + 1, j - 1)) count++;
+                    if (isMine(i + 1, j + 1)) count++;
+
+                    return count;
+                },
+            // Checks the availability of cell index
+                isValid = function (i, j) {
+                    if (i >= 0 && i < rows && j >= 0 && j < cols) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                },
+                isOpened = function (i, j) {
+                    if (!isValid(i, j)) return constants.OVERFLOW;
+                    return matrixState[i][j] == constants.OPENED_STATE;
+                },
+                isClosed = function (i, j) {
+                    if (!isValid(i, j)) return constants.OVERFLOW;
+                    return matrixState[i][j] == constants.CLOSED_STATE;
+                },
+                isMine = function (i, j) {
+                    if (!isValid(i, j)) return constants.OVERFLOW;
+                    return matrixContent[i][j] == constants.MINE;
+                },
+                notMine = function (i, j) {
+                    if (!isValid(i, j)) return constants.OVERFLOW;
+                    return matrixContent[i][j] != constants.MINE;
+                },
+                isZero = function (i, j) {
+                    if (!isValid(i, j)) return constants.OVERFLOW;
+                    return matrixContent[i][j] == constants.ZERO;
+                },
+                isOther = function (i, j) {
+                    if (!isValid(i, j)) return constants.OVERFLOW;
+                    return matrixContent[i][j] != constants.ZERO && matrixContent[i][j] != constants.MINE;
+                },
+                isMarked = function (i, j) {
+                    if (!isValid(i, j)) return constants.OVERFLOW;
+                    return matrixState[i][j] == constants.MARKED_STATE;
+                },
+                openCell = function (i, j) {
+                    if (isClosed(i, j)) {
+                        numberClosed--;
+                        matrixState[i][j] = constants.OPENED_STATE;
+                    }
+                },
+                markCell = function (i, j) {
+                    if (!isOpened(i, j)) {
+                        if (isMarked(i, j)) {
+                            matrixState[i][j] = constants.CLOSED_STATE;
+                        } else {
+                            matrixState[i][j] = constants.MARKED_STATE;
+                        }
+                        return true;
+                    }
+                    return false;
+                },
+            // Search and opening empty cells
                 searchEmpty = function (i, j, arrChanges) {
-                    cells.open(i, j);
+                    openCell(i, j);
                     arrChanges.push({'i':i, 'j': j});
-                    if (cells.isOther(i, j)) return;
+                    if (isOther(i, j)) return;
 
-                    // Проверяем соседние клетки
-                    if (cells.notMine(i - 1, j) && cells.isClosed(i - 1, j)) {
+                    if (notMine(i - 1, j) && isClosed(i - 1, j)) {
                         searchEmpty(i - 1, j, arrChanges);
                     }
-                    if (cells.notMine(i + 1, j) && cells.isClosed(i + 1, j)) {
+                    if (notMine(i + 1, j) && isClosed(i + 1, j)) {
                         searchEmpty(i + 1, j, arrChanges);
                     }
-                    if (cells.notMine(i, j - 1) && cells.isClosed(i, j - 1)) {
+                    if (notMine(i, j - 1) && isClosed(i, j - 1)) {
                         searchEmpty(i, j - 1, arrChanges);
                     }
-                    if (cells.notMine(i, j + 1) && cells.isClosed(i, j + 1)) {
+                    if (notMine(i, j + 1) && isClosed(i, j + 1)) {
                         searchEmpty(i, j + 1, arrChanges);
                     }
 
-                    // Проверяем диагональные клетки
-                    if (cells.notMine(i - 1, j - 1) && cells.isClosed(i - 1, j - 1)) {
+                    if (notMine(i - 1, j - 1) && isClosed(i - 1, j - 1)) {
                         searchEmpty(i - 1, j - 1, arrChanges);
                     }
-                    if (cells.notMine(i - 1, j + 1) && cells.isClosed(i - 1, j + 1)) {
+                    if (notMine(i - 1, j + 1) && isClosed(i - 1, j + 1)) {
                         searchEmpty(i - 1, j + 1, arrChanges);
                     }
-                    if (cells.notMine(i + 1, j - 1) && cells.isClosed(i + 1, j - 1)) {
+                    if (notMine(i + 1, j - 1) && isClosed(i + 1, j - 1)) {
                         searchEmpty(i + 1, j - 1, arrChanges);
                     }
-                    if (cells.notMine(i + 1, j + 1) && cells.isClosed(i + 1, j + 1)) {
+                    if (notMine(i + 1, j + 1) && isClosed(i + 1, j + 1)) {
                         searchEmpty(i + 1, j + 1, arrChanges);
                     }
                 };
 
-            /**
-             * Открыть ячейку
-             */
-            this.openCell = function (i, j) {
-                if (cells.isClosed(i, j)) {
+            // Public methods --------------------------------------------- */
+            this.tryOpenCell = function (i, j) {
+                if (isOpened(i, j) || isMarked(i, j)) return;
+
+                openCell(i, j);
+                var arrChanges = [];
+                arrChanges.push({'i':i, 'j': j});
+                if (isZero(i, j)) {
+                    searchEmpty(i, j, arrChanges);
+                };
+
+                this.dispatchEvent('changed', arrChanges);
+
+                if (isMine(i, j)) {
+                    this.dispatchEvent('lostGame');
+                };
+                if (numberClosed == mines) {
+                    this.dispatchEvent('wonGame');
+                };
+            };
+
+            this.tryMarkCell = function (i, j) {
+                if (markCell(i, j)) {
                     var arrChanges = [];
-                    cells.open(i, j);
                     arrChanges.push({'i':i, 'j': j});
-
-                    if (cells.isMine(i, j)) {
-                        this.dispatchEvent('lostGame');
-                        alert('Игра окончена');
-                    } else if (cells.isZero(i, j)) { // Если кликнули на нулевой ячейке, откроем всю пустую область
-                        searchEmpty(i, j, arrChanges);
-                    } else {
-                        arrChanges.push({'i':i, 'j': j});
-                    }
                     this.dispatchEvent('changed', arrChanges);
-
-                    if (cells.getNumberClosed() == mines) {
-                        this.dispatchEvent('wonGame');
-                        alert('Вы выграли');
-                    }
                 }
             };
 
-            /**
-             * Получить содержимое ячейки
-             */
-            this.getContentCell = function (i, j) {
-                return cells.getContentCell(i, j);
+            this.getContentCell = function(i, j) {
+                if (!isValid(i, j)) return constants.OVERFLOW;
+                return matrixContent[i][j];
             };
 
-            /**
-             * Проверить ячейку на открытость
-             */
-            this.isOpened = function (i, j) {
-                return cells.isOpened(i, j);
-            };
+            this.isMine = isMine;
+            this.isOpened = isOpened;
+            this.isClosed = isClosed;
+            this.isMarked = isMarked;
 
-            /**
-             * Проверить ячейку на на содержание мины
-             */
-            this.isMine = function (i, j) {
-                return cells.isMine(i, j);
-            };
-
-            /**
-             * Вовращает количество рядков
-             */
             this.getRows = function () {
                 return rows;
-            }
+            };
 
-            /**
-             * Вовращает количество столбцов
-             */
             this.getCols = function () {
                 return cols;
-            }
+            };
+
+            // Initialization --------------------------------------------- */
+            matrix.fillRandom(matrixContent, mines, constants.MINE);
+            calculateCells();
         };
 
-        // Наследуемся от диспетчера событий (чтобы уведомлять подпищиков об изменениях в модели)
-        Model.prototype = new events.EventDispatcher();
+        // Inherit from event dispatcher
+        Model.prototype = new app.utils.events.EventDispatcher();
 
         return Model;
     }

@@ -48,7 +48,7 @@ define('utils.matrix', function (app) {
 		 * @param rows Количество рядков
 		 * @param cols Количество столбцов
 		 * @param value Значение которым будет заполнен массив
-		 * @return {Array} Созданный двухмерный массив
+		 * @return {Array}
 		 */
 		create: function (rows, cols, value) {
 			var matrix = createMatrix(rows, cols);
@@ -65,7 +65,24 @@ define('utils.matrix', function (app) {
 		 */
 		fill: function (matrix, value) {
 			fillMatrix(matrix, value);
-		}
+		},
+
+        fillRandom : function (matrix, amount, value) {
+            var maxI = matrix.length - 1,
+                maxJ = matrix[0].length - 1,
+                i, j;
+
+            while (amount) {
+                i = math.getRandomInt(0, maxI);
+                j = math.getRandomInt(0, maxJ);
+                while (matrix[i][j] == value) {
+                    i = math.getRandomInt(0, maxI);
+                    j = math.getRandomInt(0, maxJ);
+                }
+                matrix[i][j] = value;
+                amount--;
+            }
+        }
 	}
 
 });

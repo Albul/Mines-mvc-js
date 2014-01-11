@@ -50,7 +50,7 @@ window[APP_NAME] = (function (app) {
     self.activePage = pMainMenu;
     activatePage(pMainMenu);
 
-    var game;
+//    var game;
 
     var audio = new Audio();
     var url = "../asset/slide.wav";
@@ -59,8 +59,12 @@ window[APP_NAME] = (function (app) {
 
     var showGame = function (rows, cols, mine) {
             activatePage(pGame);
-            if (game) game.destroy();
-            game = new app.Game(parseInt(rows), parseInt(cols), parseInt(mine));
+            var model = new app.model.Model(parseInt(rows), parseInt(cols), parseInt(mine));
+            var view = new app.view.View(model);
+            var controller = new app.controller.Controller(model, view);
+//            if (game) game.destroy();
+//            game = new app.Game(parseInt(rows), parseInt(cols), parseInt(mine));
+
             console.log("New Game with mines: " + mine.toString());
         },
         showMainMenu = function () {

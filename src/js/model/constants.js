@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-define(
-    'constants',
-    function() {
-
+define('constants', function (app) {
         return {
             MINE: -1,
             ZERO: 0,
-            CLOSED_STATE: false,
+            CLOSED_STATE: 0,
+            OPENED_STATE: 1,
+            MARKED_STATE: 3,
             OVERFLOW: false
         };
     }
