@@ -16,19 +16,20 @@
 
 define('utils.array', function (app) {
 
+    // Modules --------------------------------------------- */
     var math = app.utils.math;
 
+    // Private methods --------------------------------------------- */
     var createArray = function (length) {
-        var arr = new Array(length),
-            i = length;
+            var arr = new Array(length),
+                i = length;
 
-        while (i--) {
-            arr[i] = i + 1;
-        }
-        return arr;
-    };
-
-    var fillArray = function (length, value) {
+            while (i--) {
+                arr[i] = i + 1;
+            }
+            return arr;
+        },
+        fillArray = function (length, value) {
             var arr = new Array(length),
                 i = length;
 
@@ -37,14 +38,19 @@ define('utils.array', function (app) {
             }
 
             return arr;
-        };
-
-    var shuffle = function (arr, start, end) {
+        },
+        shuffle = function (arr, start, end) {
             for(var j, x, i = end; i >= start;
                 j = math.getRandomInt(start, end), x = arr[i], arr[i] = arr[j], arr[j] = x, i--);
             return arr;
         };
 
+    // Add to prototype of array the method clone
+    Array.prototype.clone = function() {
+        return this.slice(0);
+    };
+
+    // Public methods --------------------------------------------- */
     return {
 
         /**
@@ -61,12 +67,12 @@ define('utils.array', function (app) {
         },
 
         /**
-         * Создает случайный массив чисел из указаного диапазона, указанной длины
-         * @param from Начало диапазона выборки
-         * @param to Конец диапазона выборки
-         * @param length Длина массива
-         * @param arrExceptions Массив исключений которые входят в диапазон выборки,
-         * но не должны попасть у выходной массив
+         * Creates a random array of numbers from a specified range of the specified length
+         * @param from Start of range sampling
+         * @param to End of range sampling
+         * @param length Length of the array
+         * @param arrExceptions An array of exceptions that are included in sampling range,
+         * but should not put in the output array
          * @return {Array}
          */
         createRandom : function (from, to, length, arrExceptions) {
@@ -84,10 +90,10 @@ define('utils.array', function (app) {
         },
 
         /**
-         * Перемешивает входной массив случайным образом
-         * @param arr Входной массив
-         * @param start Начало диапазона перемешивания
-         * @param end Конец диапазона перемешивания
+         * Shuffles input array randomly
+         * @param arr The input array
+         * @param start Start of range of shuffling
+         * @param end End of the range of shuffling
          * @return {Array}
          */
         shuffle : function (arr, start, end) {
@@ -98,6 +104,12 @@ define('utils.array', function (app) {
             }
         },
 
+        /**
+         * Counts the number of elements in the array with a given value
+         * @param arr The input array
+         * @param value The input value
+         * @return {number}
+         */
         amount : function (arr, value) {
             var result = 0;
 
