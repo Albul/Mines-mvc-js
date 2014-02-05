@@ -14,58 +14,60 @@
  * limitations under the License.
  */
 
-/* Модуль работы с двухмерными массивами */
 define('utils.matrix', function (app) {
 
-	var math = app.utils.math;
+    // Modules --------------------------------------------- */
+    var math = app.utils.math;
 
-	var createMatrix = function (rows, cols) {
-		var matrix = new Array(rows),
-			i = matrix.length;
+    // Private methods --------------------------------------------- */
+    var
+        createMatrix = function (rows, cols) {
+            var matrix = new Array(rows),
+                i = matrix.length;
 
-		while (i--) {
-			matrix[i] = new Array(cols);
-		}
-		return matrix;
-	};
+            while (i--) {
+                matrix[i] = new Array(cols);
+            }
+            return matrix;
+        },
+        fillMatrix = function (matrix, value) {
+            var i = matrix.length,
+                j = matrix[0].length;
 
-	var fillMatrix = function (matrix, value) {
-		var i = matrix.length,
-			j = matrix[0].length;
+            while (i--) {
+                while (j--) {
+                    matrix[i][j] = value;
+                }
+                j = matrix[0].length;
+            }
+        };
 
-		while (i--) {
-			while (j--) {
-				matrix[i][j] = value;
-			}
-			j = matrix[0].length;
-		}
-	};
+    // Public methods --------------------------------------------- */
+    return {
 
-	return {
+        /**
+         * Creating a two-dimensional array
+         * @param rows
+         * @param cols
+         * @param value
+         * @return {Array}
+         */
+        create: function (rows, cols, value) {
+            var matrix = createMatrix(rows, cols);
+            if (typeof value != 'undefined') {
+                fillMatrix(matrix, value);
+            }
+            return matrix;
+        },
 
-		/**
-		 * Создание двухмерного массива
-		 * @param rows Количество рядков
-		 * @param cols Количество столбцов
-		 * @param value Значение которым будет заполнен массив
-		 * @return {Array}
-		 */
-		create: function (rows, cols, value) {
-			var matrix = createMatrix(rows, cols);
-			if (typeof value != 'undefined') {
-				fillMatrix(matrix, value);
-			}
-			return matrix;
-		},
-
-		/**
-		 * Заполнение существующего двухмерного массива указанным значением
-		 * @param matrix Двухмерный массив
-		 * @param value Значение которым будет заполнен массив
-		 */
-		fill: function (matrix, value) {
-			fillMatrix(matrix, value);
-		},
+        /**
+         * Filling the existing two-dimensional array specified value
+         * @param matrix
+         * @param value
+         */
+        fill: function (matrix, value) {
+            fillMatrix(matrix, value);
+        },
 
         fillRandom : function (matrix, amount, value) {
             var maxI = matrix.length - 1,
@@ -83,6 +85,5 @@ define('utils.matrix', function (app) {
                 amount--;
             }
         }
-	}
-
+    }
 });

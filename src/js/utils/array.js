@@ -20,7 +20,8 @@ define('utils.array', function (app) {
     var math = app.utils.math;
 
     // Private methods --------------------------------------------- */
-    var createArray = function (length) {
+    var
+        createArray = function (length) {
             var arr = new Array(length),
                 i = length;
 
