@@ -13,57 +13,80 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-window[APP_NAME] = (function (app) {
+define('app', function (app) {
 
-    window.location.href = "#/";
+    var self = this,
+        model;
 
-    var self = this;
+    // Set the initial value
+    var records = JSON.parse(localStorage.getItem('Mines.records'))
+        || (function () {
+        var records = [
+            {
+                'name': 'Atari',
+                'rows': 16,
+                'cols': 16,
+                'mines': 40,
+                'time': 8,
+                'factor': 1.25
+            },
+            {
+                'name': 'Abdula',
+                'rows': 8,
+                'cols': 8,
+                'mines': 10,
+                'time': 4,
+                'factor': 0.625
+            }
+        ];
+        localStorage.setItem('Mines.records', JSON.stringify(records));
+        return records;
+    }());
 
-    var addClass = function (el, clas) {
-        el.className += ' '+clas;
-    };
-
-    var removeClass = function (el, clas){
-        var elClass = ' '+el.className+' ';
-        while(elClass.indexOf(' '+clas+' ') != -1)
-            elClass = elClass.replace(' '+clas+' ', '');
-        el.className = elClass;
-    };
-
-    var activatePage = function (element) {
-        deactivePage();
-        addClass(element, 'ui-page-active');
-        self.activePage = element;
-    };
-
-    var deactivePage = function () {
-        removeClass(self.activePage, 'ui-page-active');
-    };
-
-    this.canvas = document.getElementById("canvas");
-
+    // Pages --------------------------------------------- */
     var pMainMenu = document.getElementById('page-menu'),
         pChooseGame = document.getElementById('page-choose-game'),
         pGame = document.getElementById('page-game'),
-        pCustom = document.getElementById('page-custom');
+        pCustom = document.getElementById('page-custom'),
+        pResults = document.getElementById('page-results'),
+        pRecords = document.getElementById('page-records'),
+        pAbout = document.getElementById('page-about');
 
-    self.activePage = pMainMenu;
-    activatePage(pMainMenu);
-
-//    var game;
-
-    var audio = new Audio();
-    var url = "../asset/slide.wav";
-    audio.setAttribute("src", url);
-    audio.load(); // Required for 'older' browsers
+    // Private methods --------------------------------------------- */
+    var addClass = function (el, clas) {
+            el.className += ' '+clas;
+        },
+        removeClass = function (el, clas){
+            var elClass = ' '+el.className+' ';
+            while(elClass.indexOf(' '+clas+' ') != -1)
+                elClass = elClass.replace(' '+clas+' ', '');
+            el.className = elClass;
+        },
+        activatePage = function (element) {
+            deactivePage();
+            addClass(element, 'ui-page-active');
+            self.activePage = element;
+        },
+        deactivePage = function () {
+            if (self.activePage) {
+                removeClass(self.activePage, 'ui-page-active');
+            }
+        };
 
     var showGame = function (rows, cols, mine) {
             activatePage(pGame);
-            var model = new app.model.Model(parseInt(rows), parseInt(cols), parseInt(mine));
+
+            model = new app.model.Model(parseInt(rows), parseInt(cols), parseInt(mine));
             var view = new app.view.View(model);
             var controller = new app.controller.Controller(model, view);
-//            if (game) game.destroy();
-//            game = new app.Game(parseInt(rows), parseInt(cols), parseInt(mine));
+
+            var onEndGame = function () {
+                setTimeout(function() {window.location.href = "#/results";}, 2000);
+                model.removeEventListener('lostGame', onEndGame);
+                model.removeEventListener('wonGame', onEndGame);
+            };
+            model.addEventListener('lostGame', onEndGame);
+            model.addEventListener('wonGame', onEndGame);
 
             console.log("New Game with mines: " + mine.toString());
         },
@@ -146,11 +169,90 @@ window[APP_NAME] = (function (app) {
 
             window.location.href = "#/page-game/" + horiz + "/" + vert + "/" + mines;
         },
+        showResults = function () {
+            activatePage(pResults);
+
+            var labelResult = document.getElementById('label-result');
+            var m = model.getMines(),
+                k = model.getRows() * model.getCols(),
+                t = model.getTime(),
+                factor = m / (k * t);
+
+            var addNewRecord = function() {
+                var name = prompt("Введите ваше имя для рекордной таблицы:");
+                records.splice(i, 0, {
+                    'name': name,
+                    'rows': model.getRows(),
+                    'cols': model.getCols(),
+                    'mines': model.getMines(),
+                    'time': model.getTime(),
+                    'factor': factor
+                });
+                while (records.length > 10) {
+                    records.pop();
+                }
+                localStorage.setItem('Mines.records', JSON.stringify(records));
+            };
+
+            document.getElementById('label-time').innerHTML = "Затрачено времени: "
+                + Math.floor(t / 60) + " мин " + Math.floor(t) + " сек";
+
+            if (model.isWon()) {
+                labelResult.innerHTML = "Вы выиграли ;)";
+                removeClass(labelResult, 'title-lost');
+                addClass(labelResult, 'title-won');
+
+                for (var i = 0, length = records.length; i < length; i++) {
+                    if (factor > records[i].factor) {
+                        addNewRecord();
+                        break;
+                    }
+                }
+                if (i == length && i < 10) {
+                    addNewRecord();
+                }
+            } else {
+                labelResult.innerHTML = "Вы проиграли :(";
+                removeClass(labelResult, 'title-won');
+                addClass(labelResult, 'title-lost');
+            }
+        },
         showRecords = function () {
-            console.log("Records");
+            activatePage(pRecords);
+            var tableRecords = document.getElementById('table-records');
+
+            for(var i = tableRecords.rows.length - 1; i > 1; i--) {
+                tableRecords.deleteRow(i);
+            }
+
+            for (var i = 0; i < records.length; i++) {
+                var newTr = document.createElement('TR');
+
+                var tdName = document.createElement('TD');
+                tdName.innerHTML = records[i].name;
+                tdName.align = "left";
+                newTr.appendChild(tdName);
+
+                var tdCells = document.createElement('TD');
+                tdCells.innerHTML = records[i].rows + "/" + records[i].cols;
+                newTr.appendChild(tdCells);
+
+                var tdMines = document.createElement('TD');
+                tdMines.innerHTML = records[i].mines.toString() + "     ";
+                newTr.appendChild(tdMines);
+
+                var tdTime = document.createElement('TD');
+                tdTime.innerHTML = records[i].time.toString();
+                newTr.appendChild(tdTime);
+
+                tableRecords.appendChild(newTr);
+            }
+        },
+        replay = function () {
+            window.location.href = "#/page-game/" + model.getCols() + "/" + model.getRows() + "/" + model.getMines();
         },
         showAbout = function() {
-            console.log("showAbout: bookId is populated: ");
+            activatePage(pAbout);
         };
 
     var routes = {
@@ -159,13 +261,23 @@ window[APP_NAME] = (function (app) {
         '/page-game/:rows/:cols/:mines': showGame,
         '/page-custom': showCustom,
         '/create-game': createGame,
-        '/records': showRecords,
-        '/about': showAbout,
+        '/page-records': showRecords,
+        '/page-about': showAbout,
+        '/results': showResults,
+        '/replay': replay,
         '/exit': function () {console.log('Exit');}
     };
+
+    // Initialization --------------------------------------------- */
+    var audio = new Audio();
+    var url = "../asset/slide.wav";
+    audio.setAttribute("src", url);
+    audio.load(); // Required for 'older' browsers
 
     var router = new Router(routes);
     router.init();
 
+    window.location.href = "#/";
+
     return app;
-}(window[APP_NAME] || {}));
+});
