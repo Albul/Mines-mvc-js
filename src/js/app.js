@@ -221,7 +221,7 @@ define('app', function (app) {
             activatePage(pRecords);
             var tableRecords = document.getElementById('table-records');
 
-            for(var i = tableRecords.rows.length - 1; i > 1; i--) {
+            for(var i = tableRecords.rows.length - 1; i > 0; i--) {
                 tableRecords.deleteRow(i);
             }
 
