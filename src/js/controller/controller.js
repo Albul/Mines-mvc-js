@@ -13,50 +13,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 define('controller.Controller', function (app) {
-        var Controller = function (model, view) {
-            var
-                dom = app.utils.dom,
-                canvasPosition = dom.getElementPosition(document.getElementById("canvas"));
+    var Controller = function (model, view) {
+        var
+            dom = app.utils.dom,
+            canvasPosition = dom.getElementPosition(document.getElementById("canvas"));
 
-            // Events handlers --------------------------------------------- */
-            var
-                onEndGame = function () {
-                    model.removeEventListener('wonGame', onEndGame);
-                    model.removeEventListener('lostGame', onEndGame);
-                    view.canvas.removeEventListener('click', onClick);
-                    view.canvas.removeEventListener('mousedown', onMouseDown);
-                    view.canvas.removeEventListener('mouseup', onMouseUp);
-                },
-                onClick = function (e) {
-                    if (e.which == 3) {
-                        return;
-                    }
+        // Events handlers --------------------------------------------- */
+        var
+            onEndGame = function () {
+                model.removeEventListener('wonGame', onEndGame);
+                model.removeEventListener('lostGame', onEndGame);
+                view.canvas.removeEventListener('click', onClick);
+                view.canvas.removeEventListener('mousedown', onMouseDown);
+                view.canvas.removeEventListener('mouseup', onMouseUp);
+            },
+            onClick = function (e) {
+                if (e.which == 3) {
+                    return;
+                }
+                var cell = view.getCellAtMouse(e.clientX + window.scrollX - canvasPosition.x, e.clientY + window.scrollY - canvasPosition.y);
+                model.tryOpenCell(cell.i, cell.j);
+            },
+            onMouseDown = function (e) {
+                if (e.which == 3) {
+                    this.oncontextmenu = function () {
+                        return false;
+                    };
+                }
+            },
+            onMouseUp = function (e) {
+                if (e.which == 3) { // Right click
                     var cell = view.getCellAtMouse(e.clientX + window.scrollX - canvasPosition.x, e.clientY + window.scrollY - canvasPosition.y);
-                    model.tryOpenCell(cell.i, cell.j);
-                },
-                onMouseDown = function (e) {
-                    if (e.which == 3) {
-                        this.oncontextmenu = function () {
-                            return false;
-                        };
-                    }
-                },
-                onMouseUp = function (e) {
-                    if (e.which == 3) { // Right click
-                        var cell = view.getCellAtMouse(e.clientX + window.scrollX - canvasPosition.x, e.clientY + window.scrollY - canvasPosition.y);
-                        model.tryMarkCell(cell.i, cell.j);
-                    }
-                };
+                    model.tryMarkCell(cell.i, cell.j);
+                }
+            };
 
-            // Initialization --------------------------------------------- */
-            view.canvas.addEventListener('click', onClick);
-            view.canvas.addEventListener('mousedown', onMouseDown);
-            view.canvas.addEventListener('mouseup', onMouseUp);
-            model.addEventListener('wonGame', onEndGame);
-            model.addEventListener('lostGame', onEndGame);
-            window.document.body.onselectstart = function () {return false;};
-        };
-        return Controller;
-    }
-);
+        // Initialization --------------------------------------------- */
+        view.canvas.addEventListener('click', onClick);
+        view.canvas.addEventListener('mousedown', onMouseDown);
+        view.canvas.addEventListener('mouseup', onMouseUp);
+        model.addEventListener('wonGame', onEndGame);
+        model.addEventListener('lostGame', onEndGame);
+        window.document.body.onselectstart = function () {return false;};
+    };
+    return Controller;
+});
