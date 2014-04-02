@@ -66,7 +66,6 @@ define('view.View', function (app) {
         Cell.prototype.BOTTOM_COLOR_OPENED = '#e1dfde';
         Cell.prototype.TOP_COLOR_CLOSED = '#8cb0dc';
         Cell.prototype.BOTTOM_COLOR_CLOSED = '#7aa1d2';
-
         Cell.prototype.MINE_COLOR_FILL = '#7B7B7B';
         Cell.prototype.MINE_COLOR_STROKE = '#121212';
 
