@@ -58,7 +58,7 @@ define('app', function (app) {
         },
         removeClass = function (el, clas){
             var elClass = ' '+el.className+' ';
-            while(elClass.indexOf(' '+clas+' ') != -1)
+            while (elClass.indexOf(' '+clas+' ') != -1)
                 elClass = elClass.replace(' '+clas+' ', '');
             el.className = elClass;
         },
@@ -66,6 +66,9 @@ define('app', function (app) {
             deactivePage();
             addClass(element, 'ui-page-active');
             self.activePage = element;
+        },
+        hasClass = function (element, clas) {
+            return (' ' + element.className + ' ').indexOf(' ' + clas + ' ') > -1;
         },
         deactivePage = function () {
             if (self.activePage) {
@@ -96,19 +99,15 @@ define('app', function (app) {
             audio.play();
 
             var title = pMainMenu.getElementsByClassName('title');
-            title[0].style.opacity = 0;
-            TweenLite.to(title[0], 1, {css:{opacity:1}});
-
-            var delay = 0.05;
-            var factorDelay = 0;
+            if (!hasClass(title, 'anim')) {
+                addClass(title[0], 'anim');
+            }
 
             var buttons = pMainMenu.getElementsByClassName('button');
-            var startMarginLeft = window.innerWidth + 'px';
-            for (var i = 0, max = buttons.length; i < max; i++) {
-                buttons[i].style.marginLeft = startMarginLeft;
-                TweenLite.to(buttons[i], 0.5, {css:{marginLeft:'0px'},
-                    delay:factorDelay++ * delay,
-                    ease:Back.easeOut});
+            if (!hasClass(buttons[0], 'anim')) {
+                for (var i = 0, max = buttons.length; i < max; i++) {
+                    addClass(buttons[i], 'anim');
+                }
             }
         },
         showChooseGame = function () {
@@ -117,19 +116,15 @@ define('app', function (app) {
             audio.play();
 
             var title = pChooseGame.getElementsByClassName('title');
-            title[0].style.opacity = 0;
-            TweenLite.to(title[0], 1, {css:{opacity:1}});
-
-            var delay = 0.05;
-            var factorDelay = 0;
+            if (!hasClass(title, 'anim')) {
+                addClass(title[0], 'anim');
+            }
 
             var buttons = pChooseGame.getElementsByClassName('button');
-            var startMarginLeft = window.innerWidth + 'px';
-            for (var i = 0, max = buttons.length; i < max; i++) {
-                buttons[i].style.marginLeft = startMarginLeft;
-                TweenLite.to(buttons[i], 0.5, {css:{marginLeft:'0px'},
-                    delay:factorDelay++ * delay,
-                    ease:Back.easeOut});
+            if (!hasClass(buttons[0], 'anim')) {
+                for (var i = 0, max = buttons.length; i < max; i++) {
+                    addClass(buttons[i], 'anim');
+                }
             }
         },
         showCustom = function () {
@@ -138,28 +133,22 @@ define('app', function (app) {
             audio.play();
 
             var title = pCustom.getElementsByClassName('title');
-            title[0].style.opacity = 0;
-            TweenLite.to(title[0], 1, {css:{opacity:1}});
-
-            var delay = 0.05;
-            var factorDelay = 0;
-
-            var startMarginLeft = window.innerWidth + 'px';
-            var spinners = pCustom.getElementsByTagName('table');
-            var buttons = pCustom.getElementsByClassName('button');
-
-            for (var i = 0, max = spinners.length; i < max; i++) {
-                spinners[i].style.marginLeft = startMarginLeft;
-                TweenLite.to(spinners[i], 0.5, {css:{marginLeft:'0px'},
-                    delay:factorDelay++ * delay,
-                    ease:Back.easeOut});
+            if (!hasClass(title, 'anim')) {
+                addClass(title[0], 'anim');
             }
 
-            for (var i = 0, max = buttons.length; i < max; i++) {
-                buttons[i].style.marginLeft = startMarginLeft;
-                TweenLite.to(buttons[i], 0.5, {css:{marginLeft:'0px'},
-                    delay:factorDelay++ * delay,
-                    ease:Back.easeOut});
+            var spinners = pCustom.getElementsByTagName('table');
+            if (!hasClass(spinners[0], 'anim')) {
+                for (var i = 0, max = buttons.length; i < max; i++) {
+                    addClass(spinners[i], 'anim');
+                }
+            }
+
+            var buttons = pCustom.getElementsByClassName('button');
+            if (!hasClass(buttons[0], 'anim')) {
+                for (var i = 0, max = buttons.length; i < max; i++) {
+                    addClass(buttons[i], 'anim');
+                }
             }
         },
         createGame = function () {
@@ -215,6 +204,13 @@ define('app', function (app) {
                 labelResult.innerHTML = "Вы проиграли :(";
                 removeClass(labelResult, 'title-won');
                 addClass(labelResult, 'title-lost');
+            }
+
+            var buttons = pResults.getElementsByClassName('button');
+            if (!hasClass(buttons[0], 'anim')) {
+                for (var i = 0, max = buttons.length; i < max; i++) {
+                    addClass(buttons[i], 'anim');
+                }
             }
         },
         showRecords = function () {
