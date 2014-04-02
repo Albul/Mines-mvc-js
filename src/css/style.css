@@ -244,3 +244,22 @@ h2 {
         5px 5px 0 #444,
         6px 6px 0 #444; /* end of 4 level deep dark shadow */
 }
+
+.anim {
+    -webkit-animation-name: fadeIn;
+    -webkit-animation-duration: 0.7s;
+    animation-name: fadeIn;
+    animation-duration: 0.7s;
+    animation-iteration-count: 1;
+    -webkit-animation-iteration-count: 1;
+}
+
+@-webkit-keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
