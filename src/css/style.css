@@ -126,10 +126,9 @@ body {
     border-top: 1px solid rgba(255, 255, 255, 0.5);
     display: block;
     padding: 0.5em 2.5em;
-    white-space: nowrap;  /* Запрет переноса текста в кнопках */
+    white-space: nowrap;
 
     /* The background pattern */
-
     background-image: -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.25, rgba(0, 0, 0, 0.05)), color-stop(.25, transparent), to(transparent)),
     -webkit-gradient(linear, 0 100%, 100% 0, color-stop(.25, rgba(0, 0, 0, 0.05)), color-stop(.25, transparent), to(transparent)),
     -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.75, transparent), color-stop(.75, rgba(0, 0, 0, 0.05))),
@@ -176,15 +175,15 @@ body {
 }
 
 .ui-bar-a {
-    border: 1px solid 		#333 /*{a-bar-border}*/;
-    background: 			#111 /*{a-bar-background-color}*/;
+    border: 1px solid #333;
+    background: #111;
     font-weight: bold;
-    background-image: -webkit-gradient(linear, left top, left bottom, from( #3c3c3c /*{a-bar-background-start}*/), to( #111 /*{a-bar-background-end}*/)); /* Saf4+, Chrome */
-    background-image: -webkit-linear-gradient( #3c3c3c /*{a-bar-background-start}*/, #111 /*{a-bar-background-end}*/); /* Chrome 10+, Saf5.1+ */
-    background-image:    -moz-linear-gradient( #3c3c3c /*{a-bar-background-start}*/, #111 /*{a-bar-background-end}*/); /* FF3.6 */
-    background-image:     -ms-linear-gradient( #3c3c3c /*{a-bar-background-start}*/, #111 /*{a-bar-background-end}*/); /* IE10 */
-    background-image:      -o-linear-gradient( #3c3c3c /*{a-bar-background-start}*/, #111 /*{a-bar-background-end}*/); /* Opera 11.10+ */
-    background-image:         linear-gradient( #3c3c3c /*{a-bar-background-start}*/, #111 /*{a-bar-background-end}*/);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#3c3c3c), to(#111)); /* Saf4+, Chrome */
+    background-image: -webkit-linear-gradient(#3c3c3c, #111); /* Chrome 10+, Saf5.1+ */
+    background-image:    -moz-linear-gradient(#3c3c3c, #111); /* FF3.6 */
+    background-image:     -ms-linear-gradient(#3c3c3c, #111); /* IE10 */
+    background-image:      -o-linear-gradient(#3c3c3c, #111); /* Opera 11.10+ */
+    background-image:         linear-gradient(#3c3c3c, #111);
 
     -moz-box-shadow: 3px 3px 3px #333;
     -webkit-box-shadow: 3px 3px 3px #333;
@@ -193,7 +192,7 @@ body {
     border-radius: 15px;
     border:3px solid #666;
     padding: 20px 80px;
-    display: inline-block; /* Ширина блока по содержимому*/
+    display: inline-block;
     width: 330px;
     height: 500px;
     text-align: center;
@@ -201,31 +200,31 @@ body {
 
 .ui-body-a,
 .ui-overlay-a {
-    border: 1px solid 		#444 /*{a-body-border}*/;
-    background: 			#222 /*{a-body-background-color}*/;
-    color: 					#fff /*{a-body-color}*/;
+    border: 1px solid #444;
+    background: #222;
+    color: #fff;
     text-shadow: 0 /*{a-body-shadow-x}*/ 1px /*{a-body-shadow-y}*/ 1px /*{a-body-shadow-radius}*/ #111 /*{a-body-shadow-color}*/;
     font-weight: normal;
-    background-image: -webkit-gradient(linear, left top, left bottom, from( #444 /*{a-body-background-start}*/), to( #222 /*{a-body-background-end}*/)); /* Saf4+, Chrome */
-    background-image: -webkit-linear-gradient( #444 /*{a-body-background-start}*/, #222 /*{a-body-background-end}*/); /* Chrome 10+, Saf5.1+ */
-    background-image:    -moz-linear-gradient( #444 /*{a-body-background-start}*/, #222 /*{a-body-background-end}*/); /* FF3.6 */
-    background-image:     -ms-linear-gradient( #444 /*{a-body-background-start}*/, #222 /*{a-body-background-end}*/); /* IE10 */
-    background-image:      -o-linear-gradient( #444 /*{a-body-background-start}*/, #222 /*{a-body-background-end}*/); /* Opera 11.10+ */
-    background-image:         linear-gradient( #444 /*{a-body-background-start}*/, #222 /*{a-body-background-end}*/);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#444), to(#222));
+    background-image: -webkit-linear-gradient(#444, #222); /* Chrome 10+, Saf5.1+ */
+    background-image:    -moz-linear-gradient(#444, #222); /* FF3.6 */
+    background-image:     -ms-linear-gradient(#444, #222); /* IE10 */
+    background-image:      -o-linear-gradient(#444, #222); /* Opera 11.10+ */
+    background-image:         linear-gradient(#444, #222);
 }
 
 .ui-bar-b {
-    border: 1px solid 		#456f9a /*{b-bar-border}*/;
-    background: 			#5e87b0 /*{b-bar-background-color}*/;
-    color: 					#fff /*{b-bar-color}*/;
+    border: 1px solid #456f9a;
+    background: #5e87b0;
+    color: #fff;
     font-weight: bold;
-    text-shadow: 0 /*{b-bar-shadow-x}*/ 1px /*{b-bar-shadow-y}*/ 1px /*{b-bar-shadow-radius}*/ #3e6790 /*{b-bar-shadow-color}*/;
-    background-image: -webkit-gradient(linear, left top, left bottom, from( #6facd5 /*{b-bar-background-start}*/), to( #497bae /*{b-bar-background-end}*/)); /* Saf4+, Chrome */
-    background-image: -webkit-linear-gradient( #6facd5 /*{b-bar-background-start}*/, #497bae /*{b-bar-background-end}*/); /* Chrome 10+, Saf5.1+ */
-    background-image:    -moz-linear-gradient( #6facd5 /*{b-bar-background-start}*/, #497bae /*{b-bar-background-end}*/); /* FF3.6 */
-    background-image:     -ms-linear-gradient( #6facd5 /*{b-bar-background-start}*/, #497bae /*{b-bar-background-end}*/); /* IE10 */
-    background-image:      -o-linear-gradient( #6facd5 /*{b-bar-background-start}*/, #497bae /*{b-bar-background-end}*/); /* Opera 11.10+ */
-    background-image:         linear-gradient( #6facd5 /*{b-bar-background-start}*/, #497bae /*{b-bar-background-end}*/);
+    text-shadow: 0 1px 1px  #3e6790;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#6facd5), to(#497bae)); /* Saf4+, Chrome */
+    background-image: -webkit-linear-gradient(#6facd5, #497bae); /* Chrome 10+, Saf5.1+ */
+    background-image:    -moz-linear-gradient(#6facd5, #497bae); /* FF3.6 */
+    background-image:     -ms-linear-gradient(#6facd5, #497bae); /* IE10 */
+    background-image:      -o-linear-gradient(#6facd5, #497bae); /* Opera 11.10+ */
+    background-image:         linear-gradient(#6facd5, #497bae);
 }
 
 .left {
@@ -238,11 +237,11 @@ h2 {
 
     text-shadow:
         1px 1px 0 #CCC,
-        2px 2px 0 #CCC, /* end of 2 level deep grey shadow */
+        2px 2px 0 #CCC,
         3px 3px 0 #444,
         4px 4px 0 #444,
         5px 5px 0 #444,
-        6px 6px 0 #444; /* end of 4 level deep dark shadow */
+        6px 6px 0 #444;
 }
 
 .anim {
