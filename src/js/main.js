@@ -20,7 +20,7 @@
     //--------------------------------------------------------------------------
 
     var self = this,
-        model, router,
+        model, view, controller, router,
         records, audio, url;
 
     // Pages
@@ -67,8 +67,8 @@
         activatePage(pGame);
 
         model = new mines.Model(parseInt(rows), parseInt(cols), parseInt(mine));
-        var view = new mines.View(model);
-        var controller = new mines.Controller(model, view);
+        view = new mines.View(model);
+        controller = new mines.Controller(model, view);
 
         var onEndGame = function () {
             setTimeout(function() {window.location.href = "#/results";}, 2000);
